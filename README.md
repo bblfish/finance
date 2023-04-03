@@ -68,52 +68,28 @@ August 2022. This adds the incoming and outgoins and lists each on a row. But no
 lease.
 
 ```sbt
-sbt: finance - model > run data / data
-.csv - s
-2022 / 0
-8 / 25 - a
-159 - m
-1
- [info] running run data / data
-.csv - s
-2022 / 0
-8 / 25 - a
-159 - m
-1
-2022 - 0
-8 - 25: remaining
-: €
-159.0
-out: € - 0.0
-in: €
-0.0
+sbt:finance-model> run data/data.csv -s 2022/08/25 -a 159 -m 1
+[info] running run data/data.csv -s 2022/08/25 -a 159 -m 1
+2022-08-25: remaining: € 159.0
+     out: € -0.0
+     in : € 0.0
 
-2022 - 0
-9 - 25: remaining
-: €
-1160.0
-out: €
-1399.0
-in: €
-2400.0
-Salary: €
-2400.0 Month Monthly Salary
- WebServers: € - 19.0 Month Scaleway
-Rent: € - 800.0 Month
- Electricity
-: € - 80.0 Month
- Internet: € - 50.0 Month 5 G
- Insurance
-: € - 50.0 Month Legal insurance
- Food: € - 400.0 Month
- 
- 
- TOTAL
+2022-09-25: remaining: € 1160.0
+     out: € 1399.0
+     in : € 2400.0
+   Salary:	 € 2400.0 Month	Monthly Salary
+   WebServers:	 € -19.0 Month	Scaleway
+   Rent:	 € -800.0 Month	
+   Electricity:	 € -80.0 Month	
+   Internet:	 € -50.0 Month	5G
+   Insurance:	 € -50.0 Month	Legal insurance
+   Food:	 € -400.0 Month	
+
+
+TOTAL
 =====
-income: 2400.0 average
-: 2400.0 over 1 months
- expend: -1399.0 average
-: -1399.0
+income: 2400.0 average: 2400.0 over 1 months
+expend: -1399.0 average: -1399.0
 ```
 
 We can then look at what happens over 3 months, allowing
@@ -121,93 +97,51 @@ us to see that if these were all the expenses, we should
 have put 2700 aside.
 
 ```sbt
-sbt: finance - model > run data / data
-.csv - s
-2022 / 0
-8 / 25 - a
-159 - m
-3
- [info] running run data / data
-.csv - s
-2022 / 0
-8 / 25 - a
-159 - m
-3
-2022 - 0
-8 - 25: remaining
-: €
-159.0
-out: € - 0.0
-in: €
-0.0
+sbt:finance-model> run data/data.csv -s 2022/08/25 -a 159 -m 3
+[info] running run data/data.csv -s 2022/08/25 -a 159 -m 3
+2022-08-25: remaining: € 159.0
+     out: € -0.0
+     in : € 0.0
 
-2022 - 0
-9 - 25: remaining
-: €
-1160.0
-out: €
-1399.0
-in: €
-2400.0
-Salary: €
-2400.0 Month Monthly Salary
- WebServers: € - 19.0 Month Scaleway
-Rent: € - 800.0 Month
- Electricity
-: € - 80.0 Month
- Internet: € - 50.0 Month 5 G
- Insurance
-: € - 50.0 Month Legal insurance
- Food: € - 400.0 Month
- 2022 - 10 - 25
-: remaining: €
-1921.2
-out: €
-1638.8000030517578
-in: €
-2400.0
-Salary: €
-2400.0 Month Monthly Salary
- WebServers: € - 19.0 Month Scaleway
-Rent: € - 800.0 Month
- Electricity
-: € - 80.0 Month
- Internet: € - 50.0 Month 5 G
- Insurance
-: € - 50.0 Month Legal insurance
- Food: € - 400.0 Month
- Amazon
-: € - 65.0 Once (2022 - 0
-9 - 27
-) Kites
-Leasing Mac: € - 174.8 Month Mac Book M1 Pro Max Leased
- 2022 - 11 - 25
-: remaining: €
-2747.4001
-out: €
-1573.8000030517578
-in: €
-2400.0
-Salary: €
-2400.0 Month Monthly Salary
- WebServers: € - 19.0 Month Scaleway
-Rent: € - 800.0 Month
- Electricity
-: € - 80.0 Month
- Internet: € - 50.0 Month 5 G
- Insurance
-: € - 50.0 Month Legal insurance
- Food: € - 400.0 Month
- Leasing Mac
-: € - 174.8 Month Mac Book M1 Pro Max Leased
+2022-09-25: remaining: € 1160.0
+     out: € 1399.0
+     in : € 2400.0
+   Salary:	 € 2400.0 Month	Monthly Salary
+   WebServers:	 € -19.0 Month	Scaleway
+   Rent:	 € -800.0 Month	
+   Electricity:	 € -80.0 Month	
+   Internet:	 € -50.0 Month	5G
+   Insurance:	 € -50.0 Month	Legal insurance
+   Food:	 € -400.0 Month	
+2022-10-25: remaining: € 1921.2
+     out: € 1638.8000030517578
+     in : € 2400.0
+   Salary:	 € 2400.0 Month	Monthly Salary
+   WebServers:	 € -19.0 Month	Scaleway
+   Rent:	 € -800.0 Month	
+   Electricity:	 € -80.0 Month	
+   Internet:	 € -50.0 Month	5G
+   Insurance:	 € -50.0 Month	Legal insurance
+   Food:	 € -400.0 Month	
+   Amazon:	 € -65.0 Once(2022-09-27)	Kites
+   Leasing Mac:	 € -174.8 Month	Mac Book M1 Pro Max Leased
+2022-11-25: remaining: € 2747.4001
+     out: € 1573.8000030517578
+     in : € 2400.0
+   Salary:	 € 2400.0 Month	Monthly Salary
+   WebServers:	 € -19.0 Month	Scaleway
+   Rent:	 € -800.0 Month	
+   Electricity:	 € -80.0 Month	
+   Internet:	 € -50.0 Month	5G
+   Insurance:	 € -50.0 Month	Legal insurance
+   Food:	 € -400.0 Month	
+   Leasing Mac:	 € -174.8 Month	Mac Book M1 Pro Max Leased
 
 
 TOTAL
- =====
- income: 7200.0 average
-: 2400.0 over 3 months
- expend: -4611.5996 average
-: -1537.1998
+=====
+income: 7200.0 average: 2400.0 over 3 months
+expend: -4611.5996 average: -1537.1998
 ```
 
 ## TODO
