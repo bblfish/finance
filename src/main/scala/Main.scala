@@ -1,4 +1,5 @@
 
+import Account.Repeat
 import com.github.tototoshi.csv.*
 import scopt.OParser
 
@@ -9,6 +10,7 @@ import java.time.format.DateTimeFormatter
 import java.util.{Calendar, Date}
 import scala.util.{Success, Try}
 
+/** Class to collect configuration values to run the program */
 case class Config(
  csv: Option[File] = None,
  startingAmount: Float = 0.0,
@@ -16,14 +18,14 @@ case class Config(
  months: Int = 6
 )
 
+/** Construct a Parser for the command line arguments */
 def argsParser(): OParser[Unit, Config] =
    given scopt.Read[LocalDate] = scopt.Read.reads(str => LocalDate.parse(str, Account.df))
-   
    given scopt.Read[Float] = scopt.Read.reads(str => java.lang.Float.parseFloat(str))
-   
    import scopt.OParser
    val builder = OParser.builder[Config]
    import builder.*
+   
    OParser.sequence(
       programName("accounts"),
       head("accounts", "0.1"),
@@ -62,9 +64,6 @@ def run(args: String*): Unit =
       // we take months + 1 because we start at 0
       val coveredPeriod: List[Account.State] = stream.take(config.months + 1).toList
       import System.out
-      import math.Fractional.Implicits.infixFractionalOps
-      import math.Numeric.Implicits.infixNumericOps
-      import math.Integral.Implicits.infixIntegralOps
       out.println(coveredPeriod.map(Account.pretty).mkString("\n"))
       out.println("""
          |
@@ -96,33 +95,37 @@ object Account:
     description: String
    )
    
+   /** state of the account at a given time, with the activated orders explaining the costs and incomes for that period */
    case class State(at: LocalDate, value: Float, activated: Seq[Order])
-   
-   def states(start: State, rules: Seq[Order], step: Step = Step.Month): LazyList[State] =
+  
+   /** Construct a lazy list of states, unfolding according to the orders */
+   def states(start: State, rules: Seq[Order]): LazyList[State] =
       LazyList.unfold(start) { (start: State) =>
-         // nextCal is stateful
-         val nextDt = step match
-            case Step.Day => start.at.plusDays(1)
-            case Step.Week => start.at.plusWeeks(1)
-            case Step.Month => start.at.plusMonths(1)
-         val active: Seq[Order] = rules.filter { (order: Order) =>
-            order.end.fold(true)(end => nextDt.compareTo(end) <= 0)
-             && order.start.fold(true)(start => nextDt.compareTo(start) > 0)
-             && {
-               order.repeat match
-                  case Repeat.Once(d) => d.compareTo(start.at) > 0 && d.compareTo(nextDt) <= 0
-                  case _ => true
-            }
-         }
-         val newValue = active.foldLeft(start.value) { (v, fd) =>
-            fd.repeat match
-               case Repeat.Month => fd.cost + v
-               case Repeat.Once(d) => fd.cost + v
-               case Repeat.Week => v + (fd.cost * (start.at.until(nextDt).getDays / 7))
-               case _ => v //todo: deal with year
-         }
-         Some((start, State(nextDt, newValue, active)))
+         Some((start, nextState(start, rules)))
       }
+      
+   /** calculate the next state from the current state and the given orders */
+   def nextState(start: State, rules: Seq[Order]): State  =
+      // nextCal is stateful
+      val nextDt = start.at.plusMonths(1)
+      val active: Seq[Order] = rules.filter { (order: Order) =>
+         order.end.fold(true)(end => nextDt.compareTo(end) <= 0)
+          && order.start.fold(true)(start => nextDt.compareTo(start) > 0)
+          && {
+            order.repeat match
+               case Repeat.Once(d) => d.compareTo(start.at) > 0 && d.compareTo(nextDt) <= 0
+               case _ => true
+         }
+      }
+      val newValue: Float = active.foldLeft(start.value) { (v, fd) =>
+         fd.repeat match
+            case Repeat.Month => fd.cost + v
+            case Repeat.Once(d) => fd.cost + v
+            case Repeat.Week => v + (fd.cost * (start.at.until(nextDt).getDays / 7))
+            case Repeat.Year => v + ((fd.cost / 365) * start.at.until(nextDt).getDays)
+      }
+      State(nextDt, newValue, active)
+   end nextState
    
    object StrChar {
       def unapplySeq(str: String): Seq[Char] = str.toSeq

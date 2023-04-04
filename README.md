@@ -48,8 +48,9 @@ Internet:-50:M:::5G
 
 ## Running the model
 
-One can run the code from inside `sbt`. Invoking
-`run` gives a list of command line arguments
+One can run the code from inside `sbt`, which can be installed along with other scala tools
+a number of ways as explained on the [Scala Downloads page](https://www.scala-lang.org/download/) page.
+Invoking `run` gives a list of command line arguments.
 
 ```commandline
 $ sbt
